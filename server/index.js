@@ -99,7 +99,7 @@ const sendMail = async ({ to, subject, text, html }) => {
     console.error("Error writing mock sent_emails.json log:", e.message);
   }
 
-  // 3. Send real email: Try Brevo HTTP API first, with automatic SMTP fallback
+  // 3. Send real email via Brevo HTTP API (Primary) or SMTP Relay (Fallback)
   if (process.env.BREVO_API_KEY) {
     try {
       console.log(`📡 Sending email via Brevo HTTP API to ${to}...`);
@@ -128,15 +128,14 @@ const sendMail = async ({ to, subject, text, html }) => {
         return { success: true };
       } else {
         const errText = await response.text();
-        console.warn(`⚠️ Brevo HTTP API note for ${to} (${response.status}): ${errText}. Attempting SMTP fallback...`);
+        console.error(`❌ Brevo HTTP API failed for ${to} (${response.status}): ${errText}`);
+        return { success: false, error: `Brevo error (${response.status}): ${errText}` };
       }
     } catch (apiErr) {
-      console.warn(`⚠️ Brevo HTTP API error for ${to}: ${apiErr.message}. Attempting SMTP fallback...`);
+      console.error(`❌ Brevo HTTP API error for ${to}: ${apiErr.message}`);
+      return { success: false, error: apiErr.message };
     }
-  }
-
-  // SMTP Transporter Fallback
-  if (transporter && process.env.SMTP_USER && process.env.SMTP_PASS) {
+  } else if (transporter && process.env.SMTP_USER && process.env.SMTP_PASS) {
     try {
       console.log(`📡 Sending email via SMTP Relay to ${to}...`);
       await transporter.sendMail({
@@ -150,7 +149,7 @@ const sendMail = async ({ to, subject, text, html }) => {
       return { success: true };
     } catch (smtpErr) {
       console.error(`❌ SMTP relay delivery failed for ${to}:`, smtpErr.message);
-      return { success: false, error: `Email delivery failed: ${smtpErr.message}` };
+      return { success: false, error: `SMTP error: ${smtpErr.message}` };
     }
   }
 
