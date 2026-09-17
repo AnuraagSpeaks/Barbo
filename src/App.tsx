@@ -1005,20 +1005,41 @@ export default function App() {
   // Onboarding Form Submission
   const handleOnboardingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!onboardingShopName.trim() || !onboardingOwnerName.trim() || !onboardingEmail.trim() || !onboardingContactNumber.trim() || !onboardingLocation.trim()) {
-      setOnboardingError('Please fill in all basic shop information.');
+    if (!onboardingShopName.trim()) {
+      setOnboardingError('Please enter your Shop / Salon Name.');
+      showToast('⚠️ Shop Name is required.');
       return;
     }
 
-    if (!isEmailVerified) {
-      setOnboardingError('Please verify your email address via OTP first.');
+    if (!onboardingOwnerName.trim()) {
+      setOnboardingError('Please enter the Owner / Main Barber Name.');
+      showToast('⚠️ Owner Name is required.');
       return;
     }
-    
+
+    if (!onboardingEmail.trim()) {
+      setOnboardingError('Please enter your email address.');
+      showToast('⚠️ Email is required.');
+      return;
+    }
+
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(onboardingEmail.trim())) {
       setOnboardingError('Please enter a valid email address.');
+      showToast('⚠️ Invalid email address.');
+      return;
+    }
+
+    if (!isEmailVerified) {
+      setOnboardingError('Please verify your email address via OTP before submitting.');
+      showToast('⚠️ Email verification required via OTP.');
+      return;
+    }
+
+    if (!onboardingContactNumber.trim()) {
+      setOnboardingError('Please enter your contact number.');
+      showToast('⚠️ Contact number is required.');
       return;
     }
 
@@ -1026,11 +1047,19 @@ export default function App() {
     const cleanedContact = onboardingContactNumber.trim().replace(/\D/g, '');
     if (cleanedContact.length !== 10) {
       setOnboardingError('Contact number must be exactly 10 digits (e.g. 9876543210).');
+      showToast('⚠️ Contact number must be 10 digits.');
+      return;
+    }
+
+    if (!onboardingLocation.trim()) {
+      setOnboardingError('Please enter your shop location address.');
+      showToast('⚠️ Shop location is required.');
       return;
     }
 
     if (!onboardingMapsUrl.trim()) {
       setOnboardingError('Please provide a Google Maps URL for your shop.');
+      showToast('⚠️ Google Maps URL is required.');
       return;
     }
 
@@ -1046,11 +1075,13 @@ export default function App() {
     };
     if (!isGoogleMaps(onboardingMapsUrl)) {
       setOnboardingError('Please enter a valid Google Maps link (e.g. https://maps.app.goo.gl/... or https://google.com/maps/...).');
+      showToast('⚠️ Invalid Google Maps link.');
       return;
     }
 
     if (onboardingServices.length === 0) {
-      setOnboardingError('Please add at least one service offered by your shop.');
+      setOnboardingError('Please add at least one service offered by your shop in the price menu below.');
+      showToast('⚠️ Please add at least one service to your menu.');
       return;
     }
 
@@ -2545,11 +2576,25 @@ export default function App() {
                         </div>
                       </div>
 
+                      {onboardingError && (
+                        <div style={{ background: 'rgba(239, 68, 68, 0.12)', color: 'var(--status-red)', border: '1px solid rgba(239, 68, 68, 0.25)', padding: '12px 16px', borderRadius: '10px', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
+                          <AlertCircle size={18} style={{ flexShrink: 0 }} />
+                          <span style={{ fontWeight: 500 }}>{onboardingError}</span>
+                        </div>
+                      )}
+
+                      {!isEmailVerified && !onboardingError && (
+                        <div style={{ background: 'rgba(212, 175, 55, 0.08)', color: 'var(--accent-gold)', border: '1px solid rgba(212, 175, 55, 0.2)', padding: '10px 14px', borderRadius: '8px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
+                          <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                          <span>Note: Click <strong>"Verify"</strong> next to your email above with the OTP before submitting.</span>
+                        </div>
+                      )}
+
                       <button 
                         type="submit" 
                         className="gold-glow-btn"
                         style={{ padding: '14px', justifyContent: 'center', width: '100%', marginTop: '10px' }}
-                        disabled={submittingOnboarding || !isEmailVerified}
+                        disabled={submittingOnboarding}
                       >
                         {submittingOnboarding ? 'Submitting Application...' : 'Submit Partnership Application'}
                       </button>
@@ -5389,11 +5434,25 @@ export default function App() {
                       </div>
                     </div>
 
+                    {onboardingError && (
+                      <div style={{ background: 'rgba(239, 68, 68, 0.12)', color: 'var(--status-red)', border: '1px solid rgba(239, 68, 68, 0.25)', padding: '12px 16px', borderRadius: '10px', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
+                        <AlertCircle size={18} style={{ flexShrink: 0 }} />
+                        <span style={{ fontWeight: 500 }}>{onboardingError}</span>
+                      </div>
+                    )}
+
+                    {!isEmailVerified && !onboardingError && (
+                      <div style={{ background: 'rgba(212, 175, 55, 0.08)', color: 'var(--accent-gold)', border: '1px solid rgba(212, 175, 55, 0.2)', padding: '10px 14px', borderRadius: '8px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
+                        <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                        <span>Note: Click <strong>"Verify"</strong> next to your email above with the OTP before submitting.</span>
+                      </div>
+                    )}
+
                     <button 
                       type="submit" 
                       className="gold-glow-btn"
                       style={{ padding: '14px', justifyContent: 'center', width: '100%', marginTop: '10px' }}
-                      disabled={submittingOnboarding || !isEmailVerified}
+                      disabled={submittingOnboarding}
                     >
                       {submittingOnboarding ? 'Submitting Application...' : 'Submit Partnership Application'}
                     </button>
