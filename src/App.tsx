@@ -2108,39 +2108,28 @@ export default function App() {
                 <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px', textAlign: 'center' }}>
                   Quick Credentials Autofill
                 </span>
-                <div style={{ display: 'flex', gap: '6px' }}>
+                <div style={{ display: 'flex', gap: '8px' }}>
                   <button 
                     className="btn-secondary" 
-                    style={{ flex: 1, padding: '6px', fontSize: '0.7rem', display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'center' }}
+                    style={{ flex: 1, padding: '8px', fontSize: '0.75rem', display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'center' }}
                     onClick={() => {
                       handleQuickLogin('aayu@barbo.in');
                       setShowLoginModal(false);
                     }}
                   >
-                    <span>Aayu</span>
-                    <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>(Customer)</span>
+                    <span style={{ fontWeight: 600 }}>Aayu</span>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>(Customer)</span>
                   </button>
                   <button 
                     className="btn-secondary" 
-                    style={{ flex: 1, padding: '6px', fontSize: '0.7rem', display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'center' }}
+                    style={{ flex: 1, padding: '8px', fontSize: '0.75rem', display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'center' }}
                     onClick={() => {
                       handleQuickLogin('rajesh@barbo.in');
                       setShowLoginModal(false);
                     }}
                   >
-                    <span>Rajesh Sen</span>
-                    <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>(Barber)</span>
-                  </button>
-                  <button 
-                    className="btn-secondary" 
-                    style={{ flex: 1, padding: '6px', fontSize: '0.7rem', display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'center' }}
-                    onClick={() => {
-                      handleQuickLogin('admin@barbo.in');
-                      setShowLoginModal(false);
-                    }}
-                  >
-                    <span>Admin</span>
-                    <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>(Admin)</span>
+                    <span style={{ fontWeight: 600 }}>Rajesh Sen</span>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>(Barber)</span>
                   </button>
                 </div>
               </div>
